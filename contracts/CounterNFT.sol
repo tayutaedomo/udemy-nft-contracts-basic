@@ -5,6 +5,7 @@ import "@openzeppelin/contracts@4.6.0/token/ERC721/ERC721.sol";
 import "@openzeppelin/contracts@4.6.0/access/Ownable.sol";
 import "@openzeppelin/contracts@4.6.0/token/ERC721/extensions/ERC721URIStorage.sol";
 import "@openzeppelin/contracts@4.6.0/utils/Counters.sol";
+import "@openzeppelin/contracts@4.6.0/utils/Strings.sol";
 
 contract CounterNFT is ERC721URIStorage, Ownable {
     /**
@@ -30,12 +31,22 @@ contract CounterNFT is ERC721URIStorage, Ownable {
      * - mit の際に URI を設定 _setTokenURI()
      * - EVENT 発火 emit TokenURIChanged
      */
-    function nftMint(string calldata uri) public onlyOwner {
+    function nftMint() public onlyOwner {
         _tokenIds.increment();
         uint256 newTokenId = _tokenIds.current();
 
         _mint(_msgSender(), newTokenId);
-        _setTokenURI(newTokenId, uri);
-        emit TokenURIChanged(_msgSender(), newTokenId, uri);
+
+        string memory jsonFile = string(abi.encodePacked("metadata", Strings.toString(newTokenId), ".json"));
+        _setTokenURI(newTokenId, jsonFile);
+        emit TokenURIChanged(_msgSender(), newTokenId, jsonFile);
+    }
+
+    /**
+     * @dev
+     * - URI プレフィックスの設定
+     */
+    function _baseURI() internal pure override returns (string memory) {
+        return "ipfs://bafybeigyod7ldrnytkzrw45gw2tjksdct6qaxnsc7jdihegpnk2kskpt7a/";
     }
 }
