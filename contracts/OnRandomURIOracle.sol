@@ -156,7 +156,7 @@ contract OnRandomURIOracle is ERC721URIStorage, VRFConsumerBaseV2 {
             colorName3,
             '" }, { "trait_type": "Fourth color", "value": "',
             colorName4,
-            '}]}'
+            '"}]}'
         );
 
         string memory uri = string(abi.encodePacked("data:application/json;base64,", Base64.encode(metaData)));
